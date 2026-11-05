@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mo's Barbershop — Sharp cuts, no rush</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Design read: premium-consumer local barbershop, grooming-conscious men, cold-luxury language.
+   Palette: neutral greys + ONE signal red (barber pole). */
+:root{
+  --bg:#f1f1ef; --fg:#111214; --mute:#4b4e54; --line:#c9cac6; --line2:#7a7d84; --panel:#e3e4e1;
+  --accent:#c73a2b; --ink:#0d0e10; --paper:#ececea; --whatsapp:#25D366;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#0d0e10;--fg:#ececea;--mute:#a4a7ad;--line:#26282c;--line2:#6d7078;--panel:#16171a}
+}
+:root[data-theme="dark"]{--bg:#0d0e10;--fg:#ececea;--mute:#a4a7ad;--line:#26282c;--line2:#6d7078;--panel:#16171a}
+html{scroll-padding-top:calc(72px + env(safe-area-inset-top,0px));scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1280px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.mono{font-family:"Geist Mono",ui-monospace,Menlo,monospace}
+h1,h2,h3{font-weight:700;letter-spacing:-.035em;line-height:1.02}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* nav */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav{height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px;white-space:nowrap}
+.brand{font-weight:800;letter-spacing:-.04em;font-size:1.15rem;display:flex;align-items:center;gap:10px}
+.brand i{display:block;width:8px;height:26px;background:repeating-linear-gradient(135deg,var(--accent) 0 5px,var(--paper) 5px 10px)}
+.nav-right{display:flex;align-items:center;gap:16px}
+.links{display:flex;gap:32px;font-size:.92rem;color:var(--mute)}
+.links a:hover{color:var(--fg)}
+
+/* Button styles */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;white-space:nowrap;padding:14px 26px;font:600 .95rem/1 "Geist",sans-serif;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;transition:transform .15s,background .2s}
+.btn:hover{background:#b23224}
+.btn:active{transform:translateY(1px) scale(.98)}
+.btn.ghost{background:transparent;color:var(--fg);border-color:var(--line2)}
+.btn.ghost:hover{background:var(--panel)}
+.btn.whatsapp{background:#25D366;border-color:#25D366;color:#fff}
+.btn.whatsapp:hover{background:#20bd5a;border-color:#20bd5a}
+.btn.whatsapp svg{fill:currentColor;width:18px;height:18px}
+.btn.sm{padding:11px 20px;font-size:.88rem}
+
+/* Dropdown Container */
+.dropdown-wrap{position:relative;display:inline-block}
+.dropdown-menu{
+  display:none;
+  position:absolute;
+  top:calc(100% + 6px);
+  right:0;
+  min-width:180px;
+  background:var(--paper);
+  border:1px solid var(--line2);
+  box-shadow:0 8px 24px rgba(0,0,0,0.15);
+  z-index:100;
+  flex-direction:column;
+}
+.dropdown-wrap.open .dropdown-menu{display:flex}
+.dropdown-menu a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 18px;
+  font-size:.9rem;
+  font-weight:600;
+  color:var(--fg);
+  border-bottom:1px solid var(--line);
+  transition:background .15s;
+}
+.dropdown-menu a:last-child{border-bottom:none}
+.dropdown-menu a:hover{background:var(--panel)}
+.dropdown-menu a svg{fill:currentColor;width:16px;height:16px}
+
+/* hero */
+.hero{min-height:calc(100dvh - 68px);display:grid;grid-template-columns:7fr 5fr;gap:clamp(24px,5vw,72px);align-items:stretch;padding-top:clamp(24px,5vh,64px);padding-bottom:clamp(24px,5vh,56px)}
+.hero-copy{display:flex;flex-direction:column;justify-content:center;gap:28px}
+.hero h1{font-size:clamp(2.6rem,6.6vw,6rem);font-weight:800;max-width:11ch}
+.hero p{font-size:1.1rem;color:var(--mute);max-width:36ch}
+.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.hero-img{position:relative;min-height:460px}
+.slot{position:absolute;inset:0;background:var(--img,none) center/cover,linear-gradient(160deg,#2a2c31,#101113 70%);display:flex;align-items:flex-end;padding:18px;overflow:hidden}
+.slot small{font:400 .72rem/1.3 "Geist Mono",monospace;color:#b6b9bf;border:1px dashed #6d7078;padding:6px 9px;background:rgba(13,14,16,.6)}
+.slot.has-img small{display:none}
+.pole{position:absolute;left:0;top:0;bottom:0;width:16px;background:repeating-linear-gradient(135deg,var(--accent) 0 14px,#ececea 14px 28px);background-size:40px 40px;animation:spin 3s linear infinite}
+@keyframes spin{to{background-position:0 40px}}
+
+/* marquee */
+.marq{border-block:1px solid var(--line);overflow:hidden;padding:20px 0}
+.marq div{display:flex;gap:48px;width:max-content;animation:slide 38s linear infinite;font-size:clamp(1.3rem,2.6vw,2rem);font-weight:600;letter-spacing:-.03em;white-space:nowrap}
+.marq span{color:var(--mute)}.marq b{color:var(--accent);font-weight:600}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* sections */
+section{padding:clamp(72px,11vw,150px) 0}
+h2{font-size:clamp(2.1rem,4.6vw,3.8rem);max-width:14ch}
+.eyebrow{font:500 .75rem/1 "Geist Mono",monospace;text-transform:uppercase;letter-spacing:.18em;color:var(--mute);display:block;margin-bottom:18px}
+
+/* services: tabs + list */
+.svc{display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,6vw,96px);margin-top:48px}
+.tabs{display:flex;flex-direction:column;gap:6px;align-self:start}
+.tab{all:unset;cursor:pointer;font-size:clamp(1.8rem,3.4vw,3rem);font-weight:700;letter-spacing:-.035em;color:var(--line2);padding:6px 0;transition:color .2s}
+.tab:hover{color:var(--fg)} .tab[aria-selected="true"]{color:var(--fg)}
+.tab[aria-selected="true"]::after{content:"";display:inline-block;width:.45em;height:.45em;background:var(--accent);margin-left:.4em;vertical-align:middle}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.panel[hidden]{display:none}
+.row{display:grid;grid-template-columns:1fr auto;gap:4px 24px;padding:22px 0;border-top:1px solid var(--line)}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row h3{font-size:1.25rem;letter-spacing:-.02em;font-weight:600}
+.row p{color:var(--mute);font-size:.95rem;grid-column:1}
+.row .price{grid-row:1/span 2;grid-column:2;font-size:1.6rem;font-weight:700;letter-spacing:-.03em;align-self:center}
+.row .t{font:400 .78rem "Geist Mono",monospace;color:var(--mute)}
+
+/* barbers: scroll-snap */
+.bar-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:40px}
+.snap{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:14px;margin-right:calc(-1 * clamp(20px,4vw,48px));padding-right:clamp(20px,4vw,48px)}
+.person{flex:0 0 min(78vw,320px);scroll-snap-align:start}
+.person .ph{position:relative;aspect-ratio:3/4;background:var(--panel)}
+.person:nth-child(even) .ph{margin-top:48px}
+.person h3{margin-top:16px;font-size:1.3rem;letter-spacing:-.02em;font-weight:600}
+.person p{color:var(--mute);font-size:.92rem}
+.snap::-webkit-scrollbar{height:4px}.snap::-webkit-scrollbar-thumb{background:var(--line2)}
+
+/* reviews slider section */
+.reviews-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:40px}
+.reviews-slider{display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:20px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.reviews-slider::-webkit-scrollbar{height:4px}
+.reviews-slider::-webkit-scrollbar-thumb{background:var(--line2)}
+.review-card{flex:0 0 min(85vw,380px);scroll-snap-align:start;background:var(--panel);border:1px solid var(--line);padding:32px;display:flex;flex-direction:column;justify-content:space-between;gap:24px}
+.review-card p{font-size:1.05rem;line-height:1.6;color:var(--fg)}
+.review-author{display:flex;flex-direction:column;gap:4px}
+.review-author strong{font-size:1rem;font-weight:700}
+.review-author span{font-size:.85rem;color:var(--mute);font-family:"Geist Mono",monospace}
+.stars{color:#FDD017;letter-spacing:2px;font-size:1.1rem}
+
+/* statement */
+.dark{background:var(--ink);color:var(--paper);--mute:#a4a7ad;--line:#2b2d32}
+.statement h2{max-width:20ch;font-size:clamp(2.4rem,6.5vw,5.6rem)}
+.statement h2 em{font-style:normal;color:var(--accent)}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:72px;border-top:1px solid var(--line);padding-top:32px}
+.facts strong{display:block;font-size:2.2rem;letter-spacing:-.04em;font-weight:700}
+.facts span{color:var(--mute);font-size:.95rem}
+
+/* booking & dual locations */
+.book{display:grid;grid-template-columns:1fr;gap:48px;align-items:start}
+.locations-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:32px}
+.loc-card{background:var(--panel);border:1px solid var(--line);padding:32px;display:flex;flex-direction:column;justify-content:space-between;gap:24px}
+.loc-card h3{font-size:1.6rem;letter-spacing:-.03em}
+.hours{display:grid;gap:8px;font-size:.95rem}
+.hours div{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:6px}
+.hours span{color:var(--mute)}
+.addr{color:var(--mute);font-size:.95rem;line-height:1.5}
+.card-btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+
+footer{border-top:1px solid var(--line);padding:36px 0 44px;color:var(--mute);font-size:.9rem}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}.marq div,.pole{animation:none}html{scroll-behavior:auto}
+}
+
+/* mobile collapse */
+@media (max-width:860px){
+  .links{display:none}
+  .hero{grid-template-columns:1fr;min-height:0}
+  .hero-img{min-height:340px;order:-1}
+  .svc,.book{grid-template-columns:1fr}
+  .locations-grid{grid-template-columns:1fr}
+  .tabs{flex-direction:row;flex-wrap:wrap;gap:4px 22px}
+  .tab{font-size:1.5rem}
+  .facts{grid-template-columns:1fr;gap:24px}
+  .person:nth-child(even) .ph{margin-top:0}
+  .nav-right{gap:8px}
+  .dropdown-menu{right:auto;left:0}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="brand"><i aria-hidden="true"></i>Mo's Barbershop</a>
+    <div class="nav-right">
+      <nav class="links" aria-label="Primary"><a href="#services">Services</a><a href="#barbers">Barbers</a><a href="#reviews">Reviews</a><a href="#hours">Hours</a></nav>
+      
+      <!-- Get Directions Dropdown -->
+      <div class="dropdown-wrap">
+        <button type="button" class="btn ghost sm dropdown-toggle">Get directions ▾</button>
+        <div class="dropdown-menu">
+          <a href="https://www.google.com/maps/dir//Mo's+Barber,+10sneeuberg+street%D8%8C+Glenvista,+Johannesburg+South,+2091/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x1e950576b0bbc657:0xddd8f84e99ed026a?sa=X&ved=1t:57443&ictx=111" target="_blank" rel="noopener">Glenvista ↗</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=Mo's+barber,+Upstairs,+27+Soetdoring+Ave,+Bassonia,+Johannesburg+South,+2190" target="_blank" rel="noopener">Bassonia ↗</a>
+        </div>
+      </div>
+
+      <!-- Contact Us Dropdown -->
+      <div class="dropdown-wrap">
+        <button type="button" class="btn whatsapp sm dropdown-toggle">
+          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          Contact Us ▾
+        </button>
+        <div class="dropdown-menu">
+          <a href="https://wa.me/27606694626?text=Hi%20Mo's%20Barbershop,%20I'd%20like%20to%20book%20at%20the%20Glenvista%20branch." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            Glenvista
+          </a>
+          <a href="https://wa.me/27815423366?text=Hi%20Mo's%20Barbershop,%20I'd%20like%20to%20book%20at%20the%20Bassonia%20branch." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            Bassonia
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div class="hero-copy">
+      <h1>Sharp cuts. No rush.</h1>
+      <p>Precision fades, hot towel finishes and cuts that hold for weeks.</p>
+      <div class="cta">
+        <!-- Hero Contact Us Dropdown -->
+        <div class="dropdown-wrap">
+          <button type="button" class="btn whatsapp dropdown-toggle">
+            <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            Contact Us ▾
+          </button>
+          <div class="dropdown-menu">
+            <a href="https://wa.me/27606694626?text=Hi%20Mo's%20Barbershop,%20I'd%20like%20to%20book%20at%20the%20Glenvista%20branch." target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+              Glenvista
+            </a>
+            <a href="https://wa.me/27815423366?text=Hi%20Mo's%20Barbershop,%20I'd%20like%20to%20book%20at%20the%20Bassonia%20branch." target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+              Bassonia
+            </a>
+          </div>
+        </div>
+
+        <a href="#services" class="btn ghost">View services</a>
+      </div>
+    </div>
+    <div class="hero-img">
+      <div class="slot" role="img" aria-label="Barber working on a fade"><span class="pole" aria-hidden="true"></span><small>Photo slot · barber mid-fade · 4:5</small></div>
+    </div>
+  </div>
+
+  <div class="marq" aria-hidden="true"><div>
+    <span>Skin fade</span><b>/</b><span>Classic taper</span><b>/</b><span>Scissor cut</span><b>/</b><span>Hot towel shave</span><b>/</b><span>Beard sculpt</span><b>/</b><span>Line-up</span><b>/</b>
+    <span>Skin fade</span><b>/</b><span>Classic taper</span><b>/</b><span>Scissor cut</span><b>/</b><span>Hot towel shave</span><b>/</b><span>Beard sculpt</span><b>/</b><span>Line-up</span><b>/</b>
+  </div></div>
+
+  <section id="services"><div class="wrap">
+    <span class="eyebrow rv">Services &amp; prices</span>
+    <h2 class="rv">Pick the chair time you need.</h2>
+    <div class="svc rv">
+      <div class="tabs" role="tablist" aria-label="Service categories">
+        <button class="tab" role="tab" id="t1" aria-controls="p1" aria-selected="true">Haircuts</button>
+        <button class="tab" role="tab" id="t2" aria-controls="p2" aria-selected="false" tabindex="-1">Beard &amp; shave</button>
+        <button class="tab" role="tab" id="t3" aria-controls="p3" aria-selected="false" tabindex="-1">Packages</button>
+      </div>
+      <div>
+        <div class="panel" id="p1" role="tabpanel" aria-labelledby="t1">
+          <div class="row"><h3>Skin fade</h3><span class="price">R220</span><p>Zero-to-length blend, finished with a razor edge. <span class="t">45 min</span></p></div>
+          <div class="row"><h3>Classic taper</h3><span class="price">R200</span><p>Clean sides, natural neckline, scissor-finished top. <span class="t">40 min</span></p></div>
+          <div class="row"><h3>Scissor cut</h3><span class="price">R240</span><p>Cut entirely with shears for longer styles. <span class="t">50 min</span></p></div>
+          <div class="row"><h3>Kids cut (under 12)</h3><span class="price">R150</span><p>Any style, patient hands. <span class="t">30 min</span></p></div>
+        </div>
+        <div class="panel" id="p2" role="tabpanel" aria-labelledby="t2" hidden>
+          <div class="row"><h3>Hot towel shave</h3><span class="price">R180</span><p>Straight razor, warm towels, aftershave balm. <span class="t">30 min</span></p></div>
+          <div class="row"><h3>Beard sculpt</h3><span class="price">R120</span><p>Shape, trim and neck line, finished with oil. <span class="t">25 min</span></p></div>
+          <div class="row"><h3>Line-up</h3><span class="price">R80</span><p>Edges and neckline refresh between cuts. <span class="t">15 min</span></p></div>
+        </div>
+        <div class="panel" id="p3" role="tabpanel" aria-labelledby="t3" hidden>
+          <div class="row"><h3>Cut + beard</h3><span class="price">R300</span><p>Any haircut with a beard sculpt. <span class="t">65 min</span></p></div>
+          <div class="row"><h3>The full chair</h3><span class="price">R420</span><p>Cut, hot towel shave and a towel facial. <span class="t">90 min</span></p></div>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <section id="barbers" style="padding-top:0"><div class="wrap">
+    <div class="bar-head rv">
+      <h2>Four barbers.</h2>
+      <!-- Barbers Section Contact Us Dropdown -->
+      <div class="dropdown-wrap">
+        <button type="button" class="btn whatsapp dropdown-toggle">
+          <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          Contact Us ▾
+        </button>
+        <div class="dropdown-menu">
+          <a href="https://wa.me/27606694626?text=Hi%20Mo's%20Barbershop,%20I'd%20like%20to%20book%20at%20the%20Glenvista%20branch." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            Glenvista
+          </a>
+          <a href="https://wa.me/27815423366?text=Hi%20Mo's%20Barbershop,%20I'd%20like%20to%20book%20at%20the%20Bassonia%20branch." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            Bassonia
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="snap rv">
+      <article class="person"><div class="ph"><div class="slot"><small>Portrait · 3:4</small></div></div><h3>[insert name]</h3><p>[insert specialty]</p></article>
+      <article class="person"><div class="ph"><div class="slot"><small>Portrait · 3:4</small></div></div><h3>[insert name]</h3><p>[insert specialty]</p></article>
+      <article class="person"><div class="ph"><div class="slot"><small>Portrait · 3:4</small></div></div><h3>[insert name]</h3><p>[insert specialty]</p></article>
+      <article class="person"><div class="ph"><div class="slot"><small>Portrait · 3:4</small></div></div><h3>[insert name]</h3><p>[insert specialty]</p></article>
+    </div>
+  </div></section>
+
+  <section id="reviews" style="padding-top:0"><div class="wrap">
+    <div class="reviews-head rv">
+      <div>
+        <span class="eyebrow">Client Feedback</span>
+        <h2>What our clients say.</h2>
+      </div>
+    </div>
+    <div class="reviews-slider rv" id="reviewsSlider">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>"The best barber in the South. Our boys always look sharp after their cuts. Fantastic service and talent at Mo's"</p>
+        <div class="review-author">
+          <strong>Natasha Soares</strong>
+          <span>verified client</span>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>"The best place to get a haircut and neaten up, never an issue always accommodating. Always open and available and most friendly people you will ever meet"</p>
+        <div class="review-author">
+          <strong>Daryl Mulder</strong>
+          <span>regular client</span>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>"It was the first time I went and was so happy with the experience Mo got a new customer. He was friendly and very polite. I am self-conscious and he made me feel at ease right away. We even did a beard colouring and so many extras for a very fair amount. I feel I can go every week if my hair was not growing so slowly but he will definitely see me once a month. I would advise any one to give them a try. You will be pleasantly surprised. Great job and well done. See you soon"</p>
+        <div class="review-author">
+          <strong>Garry Pienaar</strong>
+          <span>verified client</span>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>"Fresh cut as always, highly recommended for all hair types"</p>
+        <div class="review-author">
+          <strong>Ty Burness</strong>
+          <span>verified client</span>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="dark statement"><div class="wrap">
+    <h2 class="rv">One barber. One chair. <em>Your full attention.</em></h2>
+    <div class="facts">
+      <div class="rv"><strong>Open 7 days</strong><span>Drop in any day of the week.</span></div>
+      <div class="rv"><strong>Hot towel</strong><span>Included with every cut, every time.</span></div>
+      <div class="rv"><strong>Unhurried</strong><span>Time is set by the service, never the clock.</span></div>
+    </div>
+  </div></section>
+
+  <section id="hours"><div class="wrap book">
+    <div class="rv">
+      <span class="eyebrow">Hours &amp; locations</span>
+      <h2>Visit our shops.</h2>
+    </div>
+    
+    <div class="locations-grid rv">
+      <!-- Glenvista Location Card -->
+      <div class="loc-card" id="card-glenvista">
+        <div>
+          <h3>Glenvista Branch</h3>
+          <p class="addr" style="margin-top:12px">
+            <a href="https://www.google.com/maps/dir//Mo's+Barber,+10sneeuberg+street%D8%8C+Glenvista,+Johannesburg+South,+2091/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x1e950576b0bbc657:0xddd8f84e99ed026a?sa=X&ved=1t:57443&ictx=111" target="_blank" rel="noopener" style="color:var(--fg);text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:4px">Mo's Barber, 10sneeuberg street, Glenvista, Johannesburg South, 2091</a><br>
+            <a href="https://wa.me/27606694626?text=Hi%20Mo's%20Barbershop,%20I'd%20like%20to%20book%20at%20the%20Glenvista%20branch." target="_blank" rel="noopener" style="color:var(--fg);font-weight:600;display:inline-block;margin-top:6px">+27 60 669 4626</a>
+          </p>
+          <div class="hours" style="margin-top:20px">
+            <div>Sunday <span>8 am – 3 pm</span></div>
+            <div>Monday <span>8 am – 6 pm</span></div>
+            <div>Tuesday <span>8 am – 6 pm</span></div>
+            <div>Wednesday <span>8 am – 6 pm</span></div>
+            <div>Thursday <span>8 am – 6 pm</span></div>
+            <div>Friday <span>8 am – 6 pm</span></div>
+            <div>Saturday <span>8 am – 5 pm</span></div>
+          </div>
+        </div>
+        <div class="card-btns">
+          <a class="btn ghost sm" target="_blank" rel="noopener" aria-label="Get directions to Glenvista" href="https://www.google.com/maps/dir//Mo's+Barber,+10sneeuberg+street%D8%8C+Glenvista,+Johannesburg+South,+2091/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x1e950576b0bbc657:0xddd8f84e99ed026a?sa=X&ved=1t:57443&ictx=111">Get directions ↗</a>
+          <a class="btn whatsapp sm" target="_blank" rel="noopener" href="https://wa.me/27606694626?text=Hi%20Mo's%20Barbershop,%20I'd%20like%20to%20book%20at%20the%20Glenvista%20branch.">
+            <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            Contact Us
+          </a>
+        </div>
+      </div>
+
+      <!-- Bassonia Location Card -->
+      <div class="loc-card" id="card-bassonia">
+        <div>
+          <h3>Bassonia Branch</h3>
+          <p class="addr" style="margin-top:12px">
+            <a href="https://www.google.com/maps/search/?api=1&query=Mo's+barber,+Upstairs,+27+Soetdoring+Ave,+Bassonia,+Johannesburg+South,+2190" target="_blank" rel="noopener" style="color:var(--fg);text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:4px">Mo's barber, Upstairs, 27 Soetdoring Ave, Bassonia, Johannesburg South, 2190</a><br>
+            <a href="https://wa.me/27815423366?text=Hi%20Mo's%20Barbershop,%20I'd%20like%20to%20book%20at%20the%20Bassonia%20branch." target="_blank" rel="noopener" style="color:var(--fg);font-weight:600;display:inline-block;margin-top:6px">081 542 3366</a>
+          </p>
+          <div class="hours" style="margin-top:20px">
+            <div>Sunday <span>8 am – 3 pm</span></div>
+            <div>Monday <span>8 am – 6 pm</span></div>
+            <div>Tuesday <span>8 am – 6 pm</span></div>
+            <div>Wednesday <span>8 am – 6 pm</span></div>
+            <div>Thursday <span>8 am – 6 pm</span></div>
+            <div>Friday <span>8 am – 6 pm</span></div>
+            <div>Saturday <span>8 am – 5 pm</span></div>
+          </div>
+        </div>
+        <div class="card-btns">
+          <a class="btn ghost sm" target="_blank" rel="noopener" aria-label="Get directions to Bassonia" href="https://www.google.com/maps/search/?api=1&query=Mo's+barber,+Upstairs,+27+Soetdoring+Ave,+Bassonia,+Johannesburg+South,+2190">Get directions ↗</a>
+          <a class="btn whatsapp sm" target="_blank" rel="noopener" href="https://wa.me/27815423366?text=Hi%20Mo's%20Barbershop,%20I'd%20like%20to%20book%20at%20the%20Bassonia%20branch.">
+            <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            Contact Us
+          </a>
+        </div>
+      </div>
+    </div>
+  </div></section>
+</main>
+
+<footer><div class="wrap"><span>© Mo's Barbershop</span><span>Open 7 days a week</span></div></footer>
+
+<script>
+// Toggle dropdown menus
+document.querySelectorAll('.dropdown-toggle').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const wrap = btn.closest('.dropdown-wrap');
+    document.querySelectorAll('.dropdown-wrap').forEach(w => {
+      if (w !== wrap) w.classList.remove('open');
+    });
+    wrap.classList.toggle('open');
+  });
+});
+
+// Close dropdowns on outside click
+document.addEventListener('click', () => {
+  document.querySelectorAll('.dropdown-wrap').forEach(w => w.classList.remove('open'));
+});
+
+// tabs
+const tabs=[...document.querySelectorAll('.tab')];
+function pick(t){tabs.forEach(x=>{const on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute('aria-controls')).hidden=!on})}
+tabs.forEach((t,i)=>{t.addEventListener('click',()=>pick(t));t.addEventListener('keydown',e=>{
+  const k={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key];if(!k)return;e.preventDefault();
+  const n=tabs[(i+k+tabs.length)%tabs.length];pick(n);n.focus()})});
+
+// reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%3)*60+'ms';io.observe(el)});
+
+// reviews auto slide left
+const slider = document.getElementById('reviewsSlider');
+if (slider) {
+  let slideInterval = setInterval(() => {
+    if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10) {
+      slider.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      slider.scrollBy({ left: 320, behavior: 'smooth' });
+    }
+  }, 3500);
+
+  slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+  slider.addEventListener('touchstart', () => clearInterval(slideInterval), {passive: true});
+}
+</script>
+</body>
+</html>
